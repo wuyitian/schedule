@@ -1,64 +1,69 @@
 <template>
-  <!-- template里只能有一个根节点 -->
-  <div class="demo-page">
-    <text class="title">{{text}}</text>
-    <div class="item">
-      <text>任务名</text>
-      <input class="item-input" type="text" value="{{task.name}}" placeholder="任务名" onchange="updateData('name')"></input>
+    <!-- template里只能有一个根节点 -->
+    <div class="demo-page">
+        <text class="title">{{text}}</text>
+        <div class="item">
+            <text>任务名</text>
+            <input class="item-input" type="text" value="{{task.name}}" placeholder="任务名"
+                   onchange="updateData('name')"></input>
+        </div>
+        <div class="item">
+            <text>开始时间</text>
+            <input class="item-input" type="text" value="{{task.startTime}}" placeholder="开始时间"
+                   onchange="updateData('startTime')"></input>
+        </div>
+        <div class="item">
+            <text>提前提醒</text>
+            <input class="item-input" type="text" value="{{task.tipsTime}}" placeholder="提前多少分钟提醒"
+                   onchange="updateData('tipsTime')"></input>
+        </div>
+        <input class="btn margin-50" type="button" value="创建任务" onclick="insertEvent"></input>
     </div>
-    <div class="item">
-      <text>开始时间</text>
-      <input class="item-input" type="text" value="{{task.startTime}}" placeholder="开始时间" onchange="updateData('startTime')"></input>
-    </div>
-    <div class="item">
-      <text>提前提醒</text>
-      <input class="item-input" type="text" value="{{task.tipsTime}}" placeholder="提前多少分钟提醒" onchange="updateData('tipsTime')"></input>
-    </div>
-    <input class="btn margin-50" type="button" value="创建任务" onclick="insertEvent"></input>
-  </div>
 </template>
 
 <style>
-  .demo-page {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    .demo-page {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .title {
-    font-size: 40px;
-    text-align: center;
-  }
+    .title {
+        font-size: 40px;
+        text-align: center;
+    }
 </style>
 
 <script>
+  import prompt from '@system.prompt'
+
   export default {
     private: {
-        text: '创建新任务',
-        task: {
-            name: '',
-            startTime: '',
-            tipsTime: '15',
-            done:false
-        }
+      text: '创建新任务',
+      task: {
+        name: '',
+        startTime: '',
+        tipsTime: '15',
+        done: false
+      }
     },
-      updateData (name, e) {
-          this.task[name] = e.text
-      },
-      insertEvent () {
-          const self = this
-          if (self.name && self.startTime ) {
-              prompt.showToast({
-                  message: self.task.name+' 任务将在'+self.task.startTime+'执行，并提前'+self.task.tipsTime+'分钟提醒！'
-              })
-          } else {
-              prompt.showToast({
-                  message: '任务名，开始时间为必填项！'
-              })
-          }
-      },
+    updateData(name, e) {
+      this.task[name] = e.text
+    },
+    insertEvent() {
+      const self = this
+      if (self.name && self.startTime) {
+        prompt.showToast({
+          message: self.task.name + ' 任务将在' + self.task.startTime + '执行，并提前' + self.task.tipsTime + '分钟提醒！'
+        })
+      } else {
+        prompt.showToast({
+          message: '任务名，开始时间为必填项！'
+        })
+      }
+    },
 
-      /**
+    /**
      * 当用户点击菜单按钮时触发，调用app中定义的方法showMenu
      * 注意：使用加载器测试`创建桌面快捷方式`功能时，请先在`系统设置`中打开`应用加载器`的`桌面快捷方式`权限
      */
