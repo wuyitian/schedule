@@ -1,19 +1,33 @@
 <template>
   <!-- template里只能有一个根节点 -->
   <div class="demo-page">
-    <text class="title">欢迎打开{{title}}</text>
+    <text class="title">正在进行的任务</text>
     <!--已经创建的任务-->
+    <div class="tutorial-row" for="{{toDoList}}">
+      <input  if="{{!$item.done}}" type="checkbox" checked="{{$item.done}}" value="{{$item.done}}"/>
+      <text  if="{{!$item.done}}">{{$item.name}} -- {{$item.startTime}} </text>
+    </div>
 
-    <!-- 点击跳转详情页 -->
+    <!-- 点击跳转创建日程 -->
     <input class="btn" type="button" value="创建日程" onclick="routeDetail" />
+
+    <div style="height: 100px"></div>
+
+    <text class="title">已完成的任务</text>
+    <!--已经完成的任务-->
+    <div class="tutorial-row" for="{{toDoList}}">
+      <input  if="{{$item.done}}" type="checkbox" checked="{{$item.done}}" value="{{$item.done}}"/>
+      <text  if="{{$item.done}}">{{$item.name}} -- {{$item.startTime}} </text>
+    </div>
+
   </div>
 </template>
 
 <style>
   .demo-page {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    /*justify-content: center;*/
+    /*align-items: center;*/
   }
 
   .title {
@@ -22,7 +36,7 @@
   }
 
   .btn {
-    width: 550px;
+    width: 750px;
     height: 86px;
     margin-top: 75px;
     border-radius: 43px;
@@ -42,10 +56,22 @@
         toDoList:[
             {
                 name: '开会',
-                startTime: '2018年11月17日 08:30',
+                startTime: '2018年11月27日 08:30',
                 tipsTime: '15',
                 done:false
-            }
+            },
+            {
+                name: '工作汇报',
+                startTime: '2018年11月27日 09:30',
+                tipsTime: '15',
+                done:false
+            },
+            {
+                name: '打电话给客户',
+                startTime: '2018年11月26日 16:00',
+                tipsTime: '15',
+                done:true
+            },
         ]
     },
     routeDetail () {
