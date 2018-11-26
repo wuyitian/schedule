@@ -8,11 +8,11 @@
 
     <!-- 应用标签 -->
     <div id="tags">
-      <text class="tag">无安装</text>
+      <text class="tag">简单</text>
       <text class="gap">|</text>
-      <text class="tag">体积小</text>
+      <text class="tag">高效</text>
       <text class="gap">|</text>
-      <text class="tag">一步直达</text>
+      <text class="tag">定时提醒</text>
     </div>
 
     <!-- 应用描述 -->
@@ -20,11 +20,11 @@
 
     <!-- 应用详情 -->
     <div class="detail detail-first">
-      <text class="detail-title">服务类型</text>
+      <text class="detail-title">应用类型</text>
       <text class="detail-content">{{serviceType}}</text>
     </div>
     <div class="detail">
-      <text class="detail-title">主体信息</text>
+      <text class="detail-title">开发人员</text>
       <text class="detail-content">{{subjectInfo}}</text>
     </div>
 
@@ -147,9 +147,9 @@
       icon: null
     },
     private: {
-      desc: '即点即用，让你省去下载安装的步骤，立即使用各类服务',
-      serviceType: '工具类',
-      subjectInfo: '益添',
+      desc: '轻松管理你的日程，提前任务提醒，工作生活有条理，不再错过重要约会！',
+      serviceType: '效率办公',
+      subjectInfo: '吴益添',
       copyright: ''
     },
     onInit () {
