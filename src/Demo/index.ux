@@ -2,6 +2,8 @@
   <!-- template里只能有一个根节点 -->
   <div class="demo-page">
     <text class="title">欢迎打开{{title}}</text>
+    <!--已经创建的任务-->
+
     <!-- 点击跳转详情页 -->
     <input class="btn" type="button" value="创建日程" onclick="routeDetail" />
   </div>
@@ -36,7 +38,15 @@
   export default {
     // 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
     private: {
-      title: '高效日程'
+      title: '高效日程',
+        toDoList:[
+            {
+                name: '开会',
+                startTime: '2018年11月17日 08:30',
+                tipsTime: '15',
+                done:false
+            }
+        ]
     },
     routeDetail () {
       // 跳转到应用内的某个页面，router用法详见：文档->接口->页面路由
