@@ -65,6 +65,7 @@
 <script>
   import calendar from '@system.calendar'
   import prompt from '@system.prompt'
+  import router from '@system.router'
 
   export default {
     private: {
@@ -119,9 +120,21 @@
           }
         })
       }
-
+      // 跳转到应用内的某个页面
+      router.push({
+        uri: '/Demo',
+        params: { task: self.task }
+      })
     },
-
+    onHide () {
+      // 页面被切换隐藏时，将要传递的数据对象写入
+      this.$app.$data.dataPageB = {
+        gotoPage: 'pageA',
+        params: {
+          task: this.task
+        }
+      }
+    },
     /**
      * 当用户点击菜单按钮时触发，调用app中定义的方法showMenu
      * 注意：使用加载器测试`创建桌面快捷方式`功能时，请先在`系统设置`中打开`应用加载器`的`桌面快捷方式`权限
