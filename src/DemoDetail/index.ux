@@ -7,25 +7,20 @@
                    onchange="updateData('name')"></input>
         </div>
         <div class="item">
-            <text>开始时间</text>
-            <input class="item-input" type="text" value="{{task.startTime}}" placeholder="开始时间"
-                   onchange="updateData('startTime')"></input>
-        </div>
-        <div class="item">
             <text>开始日期</text>
-            <picker class="item-input" type="date" value="{{task.startDate}}" selected="{{task.startDate}}" onchange="getDate('startDate')"/>
+            <picker class="item-input" type="date" value="{{task.startDate}}" onchange="getDate('startDate')"/>
         </div>
         <div class="item">
             <text>开始时间</text>
-            <picker class="item-input" type="time" value="{{task.startDateTime}}" onchange="getTime('startDateTime')" />
+            <picker class="item-input" type="time" value="{{task.startTime}}" onchange="getTime('startTime')" />
         </div>
         <div class="item">
-            <text>{{task.startDate}}--{{task.startDateTime}}</text>
+            <text>结束日期</text>
+            <picker class="item-input" type="date" value="{{task.endDate}}" onchange="getDate('endDate')"/>
         </div>
         <div class="item">
             <text>结束时间</text>
-            <input class="item-input" type="text" value="{{task.endTime}}" placeholder="结束时间"
-                   onchange="updateData('endTime')"></input>
+            <picker class="item-input" type="time" value="{{task.endTime}}" onchange="getTime('endTime')" />
         </div>
         <div class="item">
             <text>提前提醒</text>
@@ -76,10 +71,12 @@
       text: '创建新任务',
       task: {
         name: '',
-        startDate: '2018-11-01',
+        startDate: '',
+        startTime: '',
         startDateTime: '',
-        startTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:30:00')-new Date('2018-11-27 17:00:00'))),
-        endTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:40:00')-new Date('2018-11-27 17:00:00'))),
+        endDate: '',
+        endTime: '',
+        endDateTime: '',
         tipsTime: '15',
         done: false
       }
@@ -89,9 +86,9 @@
     },
     insertEvent() {
       const self = this
-      if (self.task.name && self.task.startTime) {
+      if (self.task.name && self.task.startDate && self.task.startTime) {
         prompt.showToast({
-          message: self.task.name + ' 任务将在' + self.task.startTime + '执行，并提前' + self.task.tipsTime + '分钟提醒！'
+          message: self.task.name + ' 任务将在' + self.task.startDate+' '+ self.task.startTime + '执行，并提前' + self.task.tipsTime + '分钟提醒！'
         })
       } else {
         prompt.showToast({
@@ -99,22 +96,22 @@
         })
       }
 
-      if (self.task.name && self.task.startTime) {
+      if (self.task.name && self.task.startDate && self.task.startTime) {
         calendar.insert({
           title: self.task.name,
           description: '',
-          startDate: new Date(self.task.startTime).valueOf(),
-          endDate: new Date(self.task.endTime).valueOf(),
+          startDate: new Date(self.task.startDate+' '+self.task.startTime).valueOf(),
+          endDate: new Date(self.task.endDate+' '+self.task.endTime).valueOf(),
           remindMinutes: [self.task.tipsTime],
           success: function(ret){
             prompt.showToast({
-              message: '插入成功，id:' + ret
+              message: '任务创建成功，id:' + ret
             })
           },
           fail: function(erromsg, errocode){
             console.info(`### calendar.insert ### ${errocode}: ${erromsg}`)
             prompt.showToast({
-              message: new Date(self.task.startTime).valueOf()
+              message: new Date(self.task.startDate+' '+self.task.startTime).valueOf()
             })
             prompt.showToast({
               message: `${errocode}: ${erromsg}`
@@ -148,9 +145,28 @@
       return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
     },
     onReady () {
-      this.task.startTime=this.dateFormat(this.task.startTime)
-      this.task.endTime=this.dateFormat(this.task.endTime)
-      console.info(`触发：onReady`)
+      // 默认的开始时间为当前时间之后半小时
+      var dateTime=new Date(new Date().valueOf()+(new Date('2018-11-27 17:30:00')-new Date('2018-11-27 17:00:00')))
+      var year=dateTime.getFullYear();
+      var month= dateTime.getMonth()+1<10 ? "0"+(dateTime.getMonth()+1) : dateTime.getMonth()+1;
+      var day=dateTime.getDate()<10 ? "0"+dateTime.getDate() : dateTime.getDate();
+      var hours=dateTime.getHours()<10 ? "0"+dateTime.getHours() : dateTime.getHours();
+      var minutes=dateTime.getMinutes()<10 ? "0"+dateTime.getMinutes() : dateTime.getMinutes();
+      var seconds=dateTime.getSeconds()<10 ? "0"+dateTime.getSeconds() : dateTime.getSeconds();
+      this.task.startDate=year+"-"+month+"-"+day
+      this.task.startTime=hours+":"+minutes+":"+seconds
+
+      // 默认的开始时间为当前时间之后1小时
+      dateTime=new Date(new Date().valueOf()+(new Date('2018-11-27 17:30:00')-new Date('2018-11-27 16:30:00')))
+      year=dateTime.getFullYear();
+      month= dateTime.getMonth()+1<10 ? "0"+(dateTime.getMonth()+1) : dateTime.getMonth()+1;
+      day=dateTime.getDate()<10 ? "0"+dateTime.getDate() : dateTime.getDate();
+      hours=dateTime.getHours()<10 ? "0"+dateTime.getHours() : dateTime.getHours();
+      minutes=dateTime.getMinutes()<10 ? "0"+dateTime.getMinutes() : dateTime.getMinutes();
+      seconds=dateTime.getSeconds()<10 ? "0"+dateTime.getSeconds() : dateTime.getSeconds();
+      this.task.endDate=year+"-"+month+"-"+day
+      this.task.endTime=hours+":"+minutes+":"+seconds
+
     },
     getDate (name,e) {
       this.task[name] = e.year + '-' + (e.month + 1) + '-' + e.day
