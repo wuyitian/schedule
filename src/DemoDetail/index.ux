@@ -12,6 +12,11 @@
                    onchange="updateData('startTime')"></input>
         </div>
         <div class="item">
+            <text>结束时间</text>
+            <input class="item-input" type="text" value="{{task.endTime}}" placeholder="结束时间"
+                   onchange="updateData('endTime')"></input>
+        </div>
+        <div class="item">
             <text>提前提醒</text>
             <input class="item-input" type="text" value="{{task.tipsTime}}" placeholder="提前多少分钟提醒"
                    onchange="updateData('tipsTime')"></input>
@@ -52,6 +57,7 @@
 </style>
 
 <script>
+  import calendar from '@system.calendar'
   import prompt from '@system.prompt'
 
   export default {
@@ -59,7 +65,8 @@
       text: '创建新任务',
       task: {
         name: '',
-        startTime: '',
+        startTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:30:00')-new Date('2018-11-27 17:00:00'))),
+        endTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:40:00')-new Date('2018-11-27 17:00:00'))),
         tipsTime: '15',
         done: false
       }
@@ -78,6 +85,30 @@
           message: '任务名，开始时间为必填项！'
         })
       }
+
+      if (self.task.name && self.task.startTime) {
+        calendar.insert({
+          title: self.task.name,
+          description: '',
+          startDate: new Date(self.task.startTime).valueOf(),
+          endDate: new Date(self.task.endTime).valueOf(),
+          success: function(ret){
+            prompt.showToast({
+              message: '插入成功，id:' + ret
+            })
+          },
+          fail: function(erromsg, errocode){
+            console.info(`### calendar.insert ### ${errocode}: ${erromsg}`)
+            prompt.showToast({
+              message: new Date(self.task.startTime).valueOf()
+            })
+            prompt.showToast({
+              message: `${errocode}: ${erromsg}`
+            })
+          }
+        })
+      }
+
     },
 
     /**
@@ -86,6 +117,21 @@
      */
     onMenuPress() {
       this.$app.$def.showMenu()
+    },
+    //时间格式化函数，此处仅针对yyyy-MM-dd hh:mm:ss 的格式进行格式化
+    dateFormat:function(time) {
+      var date=new Date(time);
+      var year=date.getFullYear();
+      /* 在日期格式中，月份是从0开始的，因此要加0
+       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+       * */
+      var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+      var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+      var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+      var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+      var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+      // 拼接
+      return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
     }
   }
 </script>
