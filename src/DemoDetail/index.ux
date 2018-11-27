@@ -12,6 +12,17 @@
                    onchange="updateData('startTime')"></input>
         </div>
         <div class="item">
+            <text>开始日期</text>
+            <picker class="item-input" type="date" value="{{task.startDate}}" selected="{{task.startDate}}" onchange="getDate('startDate')"/>
+        </div>
+        <div class="item">
+            <text>开始时间</text>
+            <picker class="item-input" type="time" value="{{task.startDateTime}}" onchange="getTime('startDateTime')" />
+        </div>
+        <div class="item">
+            <text>{{task.startDate}}--{{task.startDateTime}}</text>
+        </div>
+        <div class="item">
             <text>结束时间</text>
             <input class="item-input" type="text" value="{{task.endTime}}" placeholder="结束时间"
                    onchange="updateData('endTime')"></input>
@@ -65,6 +76,8 @@
       text: '创建新任务',
       task: {
         name: '',
+        startDate: '2018-11-01',
+        startDateTime: '',
         startTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:30:00')-new Date('2018-11-27 17:00:00'))),
         endTime: new Date(new Date().valueOf()+(new Date('2018-11-27 17:40:00')-new Date('2018-11-27 17:00:00'))),
         tipsTime: '15',
@@ -92,6 +105,7 @@
           description: '',
           startDate: new Date(self.task.startTime).valueOf(),
           endDate: new Date(self.task.endTime).valueOf(),
+          remindMinutes: [self.task.tipsTime],
           success: function(ret){
             prompt.showToast({
               message: '插入成功，id:' + ret
@@ -132,6 +146,18 @@
       var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
       // 拼接
       return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
-    }
+    },
+    onReady () {
+      this.task.startTime=this.dateFormat(this.task.startTime)
+      this.task.endTime=this.dateFormat(this.task.endTime)
+      console.info(`触发：onReady`)
+    },
+    getDate (name,e) {
+      this.task[name] = e.year + '-' + (e.month + 1) + '-' + e.day
+    },
+    getTime (name,e) {
+      this.task[name] = e.hour + ':' + e.minute
+    },
+
   }
 </script>
